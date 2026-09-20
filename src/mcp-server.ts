@@ -8,7 +8,7 @@ const server = new McpServer({ name: "repository-inspector", version: "2.0.0" })
 
 server.tool(
   "review_repository",
-  "Inspects a Git repository and returns a review report.",
+  "Inspects committed Git changes relative to baseRef (default main) and returns Markdown. Does not run validation commands. Trusted local use only; repository paths and total output size are unrestricted.",
   {
     repo_path: z.string().describe("Repository path to inspect."),
     baseRef: z.string().optional(),

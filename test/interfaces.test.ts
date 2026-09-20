@@ -34,7 +34,7 @@ describe("supported interfaces", () => {
     expect(report).toContain("validation-failed");
   });
 
-  it.each([["--format", "json"], ["--repo"], ["--typo", "value"]])("rejects invalid options %s", (...args) => {
+  it.each([["--format", "json"], ["--repo"], ["--typo", "value"], ["--validate", ""], ["--validate", "   "], ["--base-ref"], ["--format"], ["--validate", "--format", "markdown"]])("rejects invalid options %s", (...args) => {
     const result = spawnSync(process.execPath, [tsx, cli, "review", "--repo", repo, ...args], {
       cwd: repo, encoding: "utf8",
     });

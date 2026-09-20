@@ -74,7 +74,10 @@ Exit code 0 means the report was written, not that every validation passed.
 Invalid options or an inspection/write failure exit with code 1.
 
 Only Markdown output is supported. `--format json` is rejected rather than
-silently returning another format. Quote repository paths containing spaces.
+silently returning another format. Empty option values are rejected. Values
+starting with `--` are reserved for options; use an explicit path such as
+`./--folder` for a repository with that name. Validation commands must start
+with a command name/path, not a bare flag. Quote paths containing spaces.
 The report overwrites `review-report.md` in the current working directory.
 
 Git inspection currently reports committed changes from `main...HEAD` (or

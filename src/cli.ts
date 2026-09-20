@@ -6,7 +6,7 @@ type Args = {
   command: string;
   repositoryPath?: string;
   baseRef?: string;
-  format?: "markdown" | "json";
+  format?: "markdown";
   validations: string[];
 };
 
@@ -14,6 +14,11 @@ function parseArgs(argv: string[]): Args {
   const args: Args = { command: argv[0] ?? "", validations: [] };
   for (let index = 1; index < argv.length; index++) {
     const token = argv[index];
+    const value = argv[index + 1];
+    if (["--repo", "--base-ref", "--format", "--validate"].includes(token) &&
+        (value === undefined || !value.trim() || value.startsWith("--"))) {
+      throw new Error(`Missing value for ${token}`);
+    }
     if (token === "--repo") {
       args.repositoryPath = argv[++index];
     } else if (token === "--base-ref") {
@@ -26,9 +31,6 @@ function parseArgs(argv: string[]): Args {
       args.validations.push(argv[++index]);
     } else {
       throw new Error(`Unknown option: ${token}`);
-    }
-    if (argv[index] === undefined || argv[index].startsWith("--")) {
-      throw new Error(`Missing value for ${token}`);
     }
   }
   return args;
