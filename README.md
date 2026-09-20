@@ -119,6 +119,7 @@ src/report.ts       Markdown report generation
 test/               public starter tests
 ```
 
-When finished, submit via **Security → Report a vulnerability** on this
-repo — see `SECURITY.md` for exactly what to include. Do not reply by email;
+When finished, submit via **Security → Report a vulnerability** on the
+[original assessment repository](https://github.com/JavadManashti/ai-repo-inspector/security/advisories/new)
+— see `SECURITY.md` for exactly what to include. Do not reply by email;
 that submission channel is not monitored.

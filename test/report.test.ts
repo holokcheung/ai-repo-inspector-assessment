@@ -2,6 +2,13 @@ import { describe, expect, it } from "vitest";
 import { markdownReport } from "../src/report.js";
 
 describe("markdownReport", () => {
+  it("handles many separate backticks within the allowed output budget", () => {
+    const output = "`x".repeat(200_000);
+    expect(() => markdownReport({
+      repositoryPath: "/work/sample", changedFiles: [],
+      validationResults: [{ command: "check", status: "passed", output }],
+    })).not.toThrow();
+  });
   it("lists changed files and validation output", () => {
     const report = markdownReport({
       repositoryPath: "/work/sample",

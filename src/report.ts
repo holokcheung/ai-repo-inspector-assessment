@@ -13,7 +13,10 @@ export function markdownReport(input: ReportInput): string {
   }
   lines.push("", "## Validation output");
   for (const result of input.validationResults) {
-    const longestFence = Math.max(2, ...(`${result.command}\n${result.output}`.match(/`+/g) ?? []).map(run => run.length));
+    let longestFence = 2;
+    for (const match of `${result.command}\n${result.output}`.matchAll(/`+/g)) {
+      longestFence = Math.max(longestFence, match[0].length);
+    }
     const fence = "`".repeat(longestFence + 1);
     lines.push(`### Validation: ${result.status}`, fence, `$ ${result.command}`, result.output, fence);
   }
