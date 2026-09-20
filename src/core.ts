@@ -4,6 +4,9 @@ import type { ReviewRequest } from "./types.js";
 import { runValidations } from "./validation.js";
 
 export async function reviewRepository(request: ReviewRequest): Promise<string> {
+  if (request.format !== undefined && request.format !== "markdown") {
+    throw new Error("Only markdown output is supported.");
+  }
   const files = changedFiles(request.repositoryPath, request.baseRef);
   const validations = await runValidations(
     request.validationCommands ?? [],

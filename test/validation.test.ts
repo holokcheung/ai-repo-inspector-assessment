@@ -20,4 +20,20 @@ describe("validation execution", () => {
     expect(results[0].output).toContain("broken");
     expect(results[1].output).toContain("next check");
   });
+
+  it("terminates a slow command and records the failure", async () => {
+    const result = await runValidation(command('setInterval(() => {}, 1000)'), process.cwd(), {
+      timeout: 100, maxBuffer: 1024,
+    });
+    expect(result.status).toBe("failed");
+    expect(result.output).toContain("terminated");
+  });
+
+  it("bounds excessive command output", async () => {
+    const result = await runValidation(command('console.log("x".repeat(100000))'), process.cwd(), {
+      timeout: 1000, maxBuffer: 1024,
+    });
+    expect(result.status).toBe("failed");
+    expect(result.output.length).toBeLessThan(2000);
+  });
 });

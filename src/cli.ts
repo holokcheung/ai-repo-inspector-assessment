@@ -15,13 +15,20 @@ function parseArgs(argv: string[]): Args {
   for (let index = 1; index < argv.length; index++) {
     const token = argv[index];
     if (token === "--repo") {
-      args.repositoryPath = argv[++index]?.split(" ")[0];
+      args.repositoryPath = argv[++index];
     } else if (token === "--base-ref") {
       args.baseRef = argv[++index];
     } else if (token === "--format") {
-      args.format = argv[++index] as Args["format"];
+      const format = argv[++index];
+      if (format !== "markdown") throw new Error("Only --format markdown is supported.");
+      args.format = format;
     } else if (token === "--validate") {
       args.validations.push(argv[++index]);
+    } else {
+      throw new Error(`Unknown option: ${token}`);
+    }
+    if (argv[index] === undefined || argv[index].startsWith("--")) {
+      throw new Error(`Missing value for ${token}`);
     }
   }
   return args;

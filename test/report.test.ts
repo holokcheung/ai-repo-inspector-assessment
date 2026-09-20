@@ -13,4 +13,13 @@ describe("markdownReport", () => {
     expect(report).toContain("npm test");
     expect(report).toContain("ok");
   });
+
+  it("shows failure and contains embedded Markdown fences", () => {
+    const report = markdownReport({
+      repositoryPath: "/work/sample", changedFiles: [],
+      validationResults: [{ command: "check", status: "failed", output: "```\nmisleading heading" }],
+    });
+    expect(report).toContain("### Validation: failed");
+    expect(report).toContain("````\n$ check\n```\nmisleading heading\n````");
+  });
 });

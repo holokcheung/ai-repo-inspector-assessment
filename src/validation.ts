@@ -1,14 +1,21 @@
 import { exec } from "node:child_process";
 import type { ValidationResult } from "./types.js";
 
-export function runValidation(command: string, cwd: string): Promise<ValidationResult> {
-  return new Promise((resolve, reject) => {
-    exec(command, { cwd }, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve({ command, status: "passed", output: stdout || stderr });
+export function runValidation(
+  command: string,
+  cwd: string,
+  limits = { timeout: 30_000, maxBuffer: 256 * 1024 },
+): Promise<ValidationResult> {
+  return new Promise((resolve) => {
+    exec(command, { cwd, ...limits, killSignal: "SIGKILL" }, (error, stdout, stderr) => {
+      const output = [stdout, stderr].filter(Boolean).join("\n");
+      resolve({
+        command,
+        status: error ? "failed" : "passed",
+        output: error
+          ? `${output}\n[Validation failed: ${error.killed ? "terminated (timeout or output limit)" : String(error.code ?? error.message)}]`
+          : output,
+      });
     });
   });
 }
